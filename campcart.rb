@@ -26,13 +26,16 @@ get '/' do
 end
 
 post '/' do
+	timer_start = Time.now
 	terms = params[:terms].delete(" ").downcase
 	supplies_store = PStore.new("stored_supplies.pstore")
 	
 	stored_supplies_from_terms = nil
+	
 	supplies_store.transaction(true) do
 		stored_supplies_from_terms = supplies_store[terms]
 	end
+	
 	
 	cartridges = nil
 	already_stored = false
@@ -44,7 +47,8 @@ post '/' do
 		cartridges = scrape(terms, params[:brand])
 	end
 	
-	erb :home, :locals => {:post => true, :cartridges => cartridges, :terms => terms, :brand => params[:brand], :already_stored => already_stored}
+	load_time = Time.now - timer_start
+	erb :home, :locals => {:post => true, :cartridges => cartridges, :terms => terms, :brand => params[:brand], :already_stored => already_stored, :load_time => load_time}
 end
 
 post '/store' do
