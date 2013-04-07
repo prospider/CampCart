@@ -1,0 +1,35 @@
+<html>
+	<head></head>
+	<body>
+		<h1>CampCart prototype</h1>
+		<form name="search" action="/" method="post">
+			<select name="brand">
+			<option value="lexmark">Lexmark</option>
+			<option value="hp">HP</option>
+			</select>
+			<input type="text" name="terms">
+			<br />
+			<input type="submit" value="Submit">
+		</form>
+		<% if post then
+			if cartridges != nil then %>
+				<table>
+					<% cartridges.each do |cartridge_name| %>
+						<tr><%= cartridge_name %></tr><br />
+					<% end %>
+				</table>
+				<% if not already_stored then %>
+					<div id="storage_check">
+						<form name="correct_cartridges" action="/store" method="post">
+							<input type="hidden" name="terms" value="<%= terms %>">
+							<input type="hidden" name="brand" value="<%= brand %>">
+							<input type="submit" value="These cartridges are correct! Thanks!">
+						</form>
+					</div>
+				<% end %>
+			<% else %>
+				<h2>Sorry! We weren't able to find any cartridges for "<%= terms %>".</h2>
+			<% end
+		end %>
+	</body>
+</html>
